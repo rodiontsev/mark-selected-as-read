@@ -13,7 +13,7 @@ Version history
 1.0 on 10/01/2009:
     - Initial version
 1.1 on 11/01/2011:
-    - Add support to a new look
+    - Add support for a new look
 */
 
 
