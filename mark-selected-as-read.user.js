@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          Google Reader - Mark Selected Items as Read
-// @version       1.0
+// @version       1.1
 // @namespace     http://twitter.com/dimarad
-// @description   This script adds the button "Mark selected as read" and a checkbox for each item.
+// @description   This script adds the button "Mark selected as read" and a checkbox for an each item
 // @author        Dmitry Rodiontsev
 // @include       htt*://www.google.tld/reader/view/*
 // ==/UserScript==
@@ -11,8 +11,9 @@
 Version history
 
 1.0 on 10/01/2009:
-    - Initial version.
-
+    - Initial version
+1.1 on 11/01/2011:
+    - Add support to a new look
 */
 
 
@@ -56,28 +57,48 @@ function appendButton() {
 
     if ((divVewerTopControls != null) && (btnMarkAllAsRead != null)) {
         var button = document.createElement("div");
-        button.className = "goog-button goog-button-base unselectable goog-inline-block goog-button-float-left goog-button-tight scour-disabled viewer-buttons";
+        button.setAttribute("role", "button");
+        button.className = "goog-inline-block jfk-button jfk-button-standard viewer-buttons goog-button-float-left";
         button.id = buttonId;
-        button.innerHTML = "<div class=\"goog-button-base-outer-box goog-inline-block\">"
-                         + "<div class=\"goog-button-base-inner-box goog-inline-block\">"
-                         + "<div class=\"goog-button-base-pos\">"
-                         + "<div class=\"goog-button-base-top-shadow\">&nbsp;</div>"
-                         + "<div class=\"goog-button-base-content\">"
-                         + "<div class=\"goog-button-body\">" + buttonText + "</div>"
-                         + "</div>"
-                         + "</div>"
-                         + "</div>"
-                         + "</div>";
+        button.innerHTML = "<div class=\"goog-inline-block goog-flat-menu-button-caption\">" + buttonText + "</div>";
         button.addEventListener("click", markSelectedAsRead, false);
+        button.addEventListener("mouseover", function(event) {switchClass(button, "jfk-button-hover", "");}, false);
+        button.addEventListener("mouseout", function(event) {switchClass(button, "", "jfk-button-hover");}, false);
         divVewerTopControls.insertBefore(button, btnMarkAllAsRead);
     }
 }
 
 function matchClass (element, sClassName) {
-    return (sClassName 
-         && element.className 
-         && element.className.length 
+    return (sClassName
+         && element.className
+         && element.className.length
          && element.className.match(new RegExp("(^|\\s+)(" + sClassName +")($|\\s+)")));
+}
+
+function switchClass(element, sClassName, sInstead) {
+	if (matchClass(element, sClassName)) {
+		setClass(element, sInstead, sClassName);
+	}else{
+		setClass(element, sClassName, sInstead);
+	}
+}
+
+function setClass(element, sClassName, sInstead) {
+	if (element && element.className != null) {
+		sClassName = (sClassName.length) ? sClassName.replace(/(^\s+|\s+$)/, "") : "";
+		if(element.className.length) {
+			var sOld = sClassName;
+			if (sInstead && sInstead.length) {
+				sInstead = sInstead.replace(/\s+(\S)/g, "|$1");
+				if (sOld) {
+					sOld += "|";
+				}
+				sOld += sInstead;
+			}
+			element.className = element.className.replace(new RegExp("(^|\\s+)(" + sOld +")($|\\s+)", "g"), "$1");
+		}
+		element.className += (element.className.length && sClassName ? " " : "") + sClassName;
+	}
 }
 
 function simulateClick(node) {
