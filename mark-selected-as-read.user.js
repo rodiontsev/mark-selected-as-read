@@ -14,6 +14,8 @@ Version history
     - Initial version
 1.1 on 11/01/2011:
     - Add support for a new look
+1.1.1 on 11/22/2011:
+    - Vertical alignment of checkboxes
 */
 
 
@@ -40,7 +42,7 @@ function nodeInserted(event) {
             checkbox.type = "checkbox";
             checkbox.className = "mark-selected-as-read-checkbox-class";
             checkbox.style.marginRight = "9px";
-            checkbox.style.verticalAlign = "top";
+            checkbox.style.verticalAlign = "middle";
             checkbox.addEventListener("click", function(event) {event.stopPropagation();}, true);
             var entrySecondary = element.getElementsByClassName("entry-secondary")[0];
             entrySecondary.insertBefore(checkbox, entrySecondary.firstChild);
